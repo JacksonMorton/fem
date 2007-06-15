@@ -27,4 +27,4 @@ Th = xdc_focused_multirow (no_elements,width,no_elements_y,height, ...
 % Gianmarco's is very broadband, so I will artifcially put
 % it at 2.0
 fractionalBandwidth = 2.0;
-centerFrequency = X.XXe6;
+centerFrequency = 7.56e6;

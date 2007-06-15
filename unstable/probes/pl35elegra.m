@@ -29,4 +29,4 @@ Th = xdc_focused_multirow (no_elements,width,no_elements_y,height, ...
     kerf,kerf,Rfocus,no_sub_x,no_sub_y,FIELD_PARAMS.focus);
 % define the fractional bandwidth
 fractionalBandwidth = 0.5;
-centerFrequency = X.XXe6;
+centerFrequency = 3.6e6;
