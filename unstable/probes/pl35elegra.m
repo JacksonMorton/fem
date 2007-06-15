@@ -1,5 +1,5 @@
-function [Th,fractionalBandwidth]=vf105(FIELD_PARAMS);
-% function [Th,fractionalBandwidth]=vf105(FIELD_PARAMS);
+function [Th,fractionalBandwidth,centerFrequency]=vf105(FIELD_PARAMS);
+% function [Th,fractionalBandwidth,centerFrequency]=vf105(FIELD_PARAMS);
 %
 % Create 'Th' transducer handle and define the fractional bandwidth for the
 % VF10-5 for use by fieldprms3d_arfi.m

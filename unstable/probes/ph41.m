@@ -1,5 +1,5 @@
-function [Th,fractionalBandwidth]=ph41(FIELD_PARAMS);
-% function [Th,fractionalBandwidth]=ph41(FIELD_PARAMS);
+function [Th,fractionalBandwidth,centerFrequency]=ph41(FIELD_PARAMS);
+% function [Th,fractionalBandwidth,centerFrequency]=ph41(FIELD_PARAMS);
 %
 % Create 'Th' transducer handle and define the fractional bandwidth for the
 % PH4-1 for use by fieldprms3d_arfi.m.  (parameters provided by Kristin)
@@ -8,7 +8,7 @@ function [Th,fractionalBandwidth]=ph41(FIELD_PARAMS);
 
 disp('Transducer: PH4-1');
 no_elements_y=1;
-width=.2e-3
+width=.2e-3;
 kerf=0.02e-3;
 pitch = width + kerf;
 height=13.5e-3;
