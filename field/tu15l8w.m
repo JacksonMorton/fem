@@ -8,7 +8,7 @@ function [Th,fractionalBandwidth,centerFrequency]=tu15l8w(FIELD_PARAMS);
 
 disp('Transducer: 15L8W');
 no_elements_y=1;
-pitch = 200e-3;
+pitch = 0.2e-3;
 kerf=0.025e-3;
 width=pitch-kerf;
 height=4.0e-3;
