@@ -21,6 +21,8 @@ end;
 % mathematically sub-dice elements to make them ~1 lambda dimensions
 no_sub_y=height/width;
 no_sub_x=1;
+% this probe does not have a lens on it, so I'm setting Rfocus to be 10 cm
+Rfocus = 0.1; % m
 % define the transducer handle
 Th = xdc_focused_multirow(no_elements,width,no_elements_y,height,kerf,kerf,Rfocus,no_sub_x,no_sub_y,FIELD_PARAMS.focus);
 % define the fractional bandwidth
