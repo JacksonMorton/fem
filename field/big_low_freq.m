@@ -36,7 +36,7 @@ R_lens = 52.54e-3;             % Lens Radius of Curvature
 lens_edge = .305e-3;           % lens edge thickness
 lens_width_curv = 10.195e-3;   % width of curvature on lens
 
-tx_el_x = min(round(FIELD_PARAMS.focus(3)/(pitch_x*.FIELD_PARAMS.Fnum)),no_elements_x); % #tx elements
+tx_el_x = min(round(FIELD_PARAMS.focus(3)/(pitch_x*FIELD_PARAMS.Fnum)),no_elements_x); % #tx elements
 tx_el_y = no_elements_y;
 
 % Create Transmitting Transducer
