@@ -21,8 +21,8 @@ kerf_y = 0.025e-3;
 pitch_x = 0.44e-3;
 width = pitch_x - kerf_x;
 pitch_y = 2.525e-3;
-height = 2.5e-3;
-no_sub_x = 1;
+height = 2.5e-2;
+no_sub_x = 5;
 no_sub_y = 25
 
 % ensure odd number of y subdivisions
