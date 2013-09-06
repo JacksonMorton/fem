@@ -1,9 +1,11 @@
 function []=field2dyna(NodeName,alpha,Fnum,focus,Frequency,Transducer,Impulse)
 %function []=field2dyna(NodeName,alpha,Fnum,focus,Frequency,Transducer,Impulse)
-% ------------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % INPUT:
-% NodeName (string) - file name to read nodes from (nodes.dyn)
-% alpha - 0.5, 1.0, etc.
+% NodeName (string) - file name to read nodes from (e.g., nodes.dyn); needs to
+%                     be a comma-delimited file with header/footer lines that
+%                     start with *
+% alpha - 0.5, 1.0, etc. (dB/cm/MHz)
 % Fnum - F/# (e.g. 1.3)
 % focus - [x y z] (m) "Field" coordinates
 % Frequency - excitation frequency (MHz)
@@ -11,24 +13,11 @@ function []=field2dyna(NodeName,alpha,Fnum,focus,Frequency,Transducer,Impulse)
 % Impulse (string) - 'gaussian','exp'
 %
 % OUTPUT:
-% dyna_ispta*.mat and output*.asc files are saved
-% output*.asc files contain the nodal forces to input into the dyna deck
+% dyna_ispta*.mat file is saved to CWD
 %
 % Example:
 % field2dyna('nodes.dyn',0.5,1.3,[0 0 0.02],7.2,'vf105','gaussian');
-% ------------------------------------------------------------------------------
-% MODIFICATION HISTORY
-% ------------------------------------------------------------------------------
-% Originally Written - Mark 07/31/03
-% Added frequency as an input parameter - Mark 01/31/05
-% ------------------------------------------------------------------------------
-% Added input variables Transducer and IMPULSE to pass to fieldprms3d_arfi.
-% Mark 06/15/05
-% ------------------------------------------------------------------------------
-% removed dependence on nodes.asc for the input nodes; can now work on nodes.dyn
-% assuming that all of the comments are delineated with '*'
-% Mark 2011-04-21
-% ------------------------------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 addpath('/home/mlp6/matlab/Field_II_7.10');
 
@@ -40,6 +29,10 @@ measurementPointsandNodes = cell2mat(measurementPointsandNodes);
 
 % skip node number, use just coords
 measurementPoints=measurementPointsandNodes(:,2:4);
+
+% check to see if there are nodes in the x = y = 0 plane to make sure that 
+% "on axis" intensities are properly captured
+check_on_axis(measurementPoints);
 
 % invert the z axis
 measurementPoints(:,3)=-measurementPoints(:,3);
@@ -73,3 +66,20 @@ eval(sprintf('save dyna-I-f%.2f-F%.1f-FD%.3f-a%.1f.mat intensity FIELD_PARAMS',F
 
 disp('The next step is to run makeLoadsTemps.');
 disp('This will generate point loads and initial temperatures.');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function check_on_axis(measurementPoints)
+% function check_on_axis(measurementPoints)
+%
+% check to see if nodes exist on the x = y = 0 plane to insure that the
+% intensity fields are properly represented
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+xlocs = unique(measurementPoints(1,:));
+ylocs = unique(measurementPoints(2,:));
+
+% test for x and y locations that are at 0 (imaging plane), and if both don't exist, then display a warning
+if((max(xlocs==0) + max(ylocs==0)) < 2),
+    warning('There are not nodes in the lateral / elevation plane = 0 (imaging plane).  This can lead to inaccurate representations of the intensity fields!!');
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
