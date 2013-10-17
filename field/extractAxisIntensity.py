@@ -21,16 +21,17 @@ def extractAxisIntensity(dynaInput, axis, location, tol):
     """
  
     import scipy.io
+    import numpy as np
+
+    from mesh import bc
+
     fieldData = scipy.io.load(dynaInput)
     intensity = fieldData['intensity']
     fieldParams = fieldData['FIELD_PARAMS']
     mpn = fieldParams[0][0]
     
-    SearchDims = list(set([1, 2, 3]) - set(axis))
+    [snic,axes]=bc.SortNodeIDs(mpn)
 
-    import numpy as np
-    axisOfInterest = np.nonzero(
-    
 
 '''
 axisOfInterest=find(abs(mpn(:,SearchDims(1))) < (location(1) + Tol) & ...
