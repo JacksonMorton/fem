@@ -51,7 +51,7 @@ def extractPlane(snic,axes,plane):
     OUPUTS:
         planeNodeIDs - spatially-sorted 2D node IDs on the specified plane
         
-    EXAMPLE: planeNodeIDs = extractPlane(snic,axes,(0,-0.1))
+    EXAMPLE: planeNodeIDs = extractPlane(snic,axes,(2,-0.1))
     '''
     if plane[0] == 0:
         planeNodeIDs = snic[axes[plane[0]] == plane[1],:,:]
@@ -64,3 +64,31 @@ def extractPlane(snic,axes,plane):
 
     planeNodeIDs = planeNodeIDs.squeeze()
     return planeNodeIDs
+
+def extractAxis(snic,axes,axis):
+    '''
+    Extract the node IDs on a specified axis from a sorted node ID & coordinate 3D array.
+
+    INPUTS:
+        snic - sorted node IDs & coordinates array
+        axes - list of unique coordinates in the x, y, and z dimensions
+        axis - list:
+            dim - dimension of the axis to extract (x=0, y=1, z=2)
+            coords - orthogonal coordinates that define the axis (must exist in axes list)
+
+    OUPUTS:
+        axisNodeIDs - spatially-sorted node IDs on the specified axis
+        
+    EXAMPLE: axisNodeIDs = extractAxis(snic,axes,(2,0,0))
+    '''
+    if axis[0] == 0:
+        axisNodeIDs = snic[:,axes[1] == axis[1],axes[2] == axis[2]]
+    elif axis[0] == 1: 
+        axisNodeIDs = snic[axes[0] == axis[1],:,axes[2] == axis[2]]
+    elif axis[0] == 2: 
+        axisNodeIDs = snic[axes[0] == axis[1],axes[1] == axis[2],:]
+    else:
+        sys.exit("ERROR: Specified axis indices to extract do not exist")
+
+    axisNodeIDs = axisNodeIDs.squeeze()
+    return axisNodeIDs
