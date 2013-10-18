@@ -1,14 +1,23 @@
 function [intensity,FIELD_PARAMS] = dynaField(FIELD_PARAMS, numWorkers)
-% allocate number of workers
-currentWorkers = matlabpool('size');
-isPoolOpen = (currentWorkers > 0);
-if (isPoolOpen)
-    matlabpool close;
-end
 
-maximumNumWorkers = feature('numCores'));
+if(numWorkers != 1 || nargin == 2),
+    parallel = True;
+end;
 
-if (nargin == 2)
+if(parallel),
+
+    % allocate number of workers
+    currentWorkers = matlabpool('size');
+    isPoolOpen = (currentWorkers > 0);
+    if (isPoolOpen)
+        matlabpool close;
+    end
+
+    maximumNumWorkers = feature('numCores'));
+
+end;
+
+if(parallel)
     if (numWorkers <= maximumNumWorkers)
         matlabpool('open', numWorkers);
     else
@@ -27,10 +36,9 @@ set_field('Freq_att',Freq_att);
 set_field('att_f0',att_f0);
 set_field('use_att',1);
  
-% compute Ispta at each location for a single tx pulse
-% optimizing by computing only relevant nodes... will assume others are zero
+% compute Ispta at each location for a single tx pulse optimizing by computing
+% only relevant nodes... will assume others are zero
 StartTime = fix(clock);
-% disp(sprintf('Start Time: %i:%2.0i',StartTime(4),StartTime(5)));
 Time = datestr(StartTime, 'HH:MM:SS PM');
 disp(sprintf('Start Time: %s', Time))
 tic;
