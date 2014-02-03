@@ -7,17 +7,20 @@ from __future__ import division
 #   number of x, y, and z elements respectively.
 
 # Corner of meshgrid (x1,y1,z1)
-x1 = 1
-y1 = 1
-z1 = 1
+corner_1 = [1,1,1]
+x1 = corner_1[0]
+y1 = corner_1[1]
+z1 = corner_1[2]
 # Opposite corner of meshgrid (x2,y2,z2)
-x2 = 2
-y2 = 3
-z2 = 4
+corner_2 = [2,3,4]
+x2 = corner_2[0]
+y2 = corner_2[1]
+z2 = corner_2[2]
 # Number of x elements, y elements, and z elements, respectively.
-xEle = 2
-yEle = 2
-zEle = 2
+numElements = [2,2,2]
+xEle = numElements[0]
+yEle = numElements[1]
+zEle = numElements[2]
 
 # open a file for writing
 
@@ -33,7 +36,7 @@ zEle = 2
 # after each for loop iteration, and I wasn't sure if I could get each list to
 # print out neatly into columns in a .dyn or .txt file.
 Test1 = True # Define a boolean that runs the testing parameters when 'True'.
-fid = open('nodes.txt','r+')
+fid = open('nodes.txt','w+')
 for i in range(1,xEle+2):
     for j in range(1,yEle+2):
         for k in range(1,zEle+2):
@@ -81,7 +84,7 @@ fid.close()
 
 Test2 = True
 part = 1
-#file2 = open('elements.txt','r+')
+file2 = open('elements.txt','w+')
 for i in range(1,xEle+1):
     for j in range(1,yEle+1):
         for k in range(1,zEle+1):
@@ -94,11 +97,11 @@ for i in range(1,xEle+1):
             n6 = n5+(zEle+1)
             n7 = n6+1
             n8 = n5+1
-            #file2.write("%i %i %i %i %i %i %i %i %i %i" % (elementID,part,n1,n2,n3,n4,n5,n6,n7,n8))
+            file2.write("%i %i %i %i %i %i %i %i %i %i" % (elementID,part,n1,n2,n3,n4,n5,n6,n7,n8))
             print("%i %i %i %i %i %i %i %i %i %i" % (elementID,part,n1,n2,n3,n4,n5,n6,n7,n8))
             #if Test2 == True:
                 #Check to see that there are only two discrete values for x,y,and z.
                 #See additional checks written down.
-#file2.close()
+file2.close()
             
     
