@@ -7,7 +7,15 @@
 from __future__ import division
 
 """
-This script take three inputs and retuns a linear 
+Using (x1, y1, z1) and (x2, y2, z2) as opposite corners of a meshgrid,
+this script creates nodes.dyn and elems.dyn using xEle, yEle, and zEle 
+as the number of x, y, and z elements respectively.
+
+Inputs: corner1 = (x1,y1,z1)
+        corner2 = (x2,y2,z2)
+        numbElements = (x,y,z)
+Outputs: nodes.dyn <-- Lists the x, y, and z location of each node in the mesh
+         elements.dyn <-- Lists the 8 defining nodes for each element in the mesh
 
 LICENSE
 =======
@@ -35,29 +43,9 @@ import os
 # import sys             # The 'sys' and 'numpy' modules are not being used.
 # import numpy as np
 
-#GENMESHMATLAB
-#   Using (x1, y1, z1) and (x2, y2, z2) as opposite corners of a meshgrid,
-#   creates nodes.dyn and elems.dyn using xEle, yEle, and zEle as the
-#   number of x, y, and z elements respectively.
-
-## Corner of meshgrid (x1,y1,z1)
-##corner_1 = [1,1,1]
-#x1 = corner_1[0]
-#y1 = corner_1[1]
-#z1 = corner_1[2]
-## Opposite corner of meshgrid (x2,y2,z2)
-##corner_2 = [3,3,3]
-#x2 = corner_2[0]
-#y2 = corner_2[1]
-#z2 = corner_2[2]
-## Number of x elements, y elements, and z elements, respectively.
-##numElements = [2,2,2]
-#xEle = numElements[0]
-#yEle = numElements[1]
-#zEle = numElements[2]
-corner1 = [1,1,1]
-corner2 = [3,3,3]
-numbElements = [2,2,2]
+corner1 = [1,1,1] # corner1 = Corner of meshgrid (x1,y1,z1)
+corner2 = [3,3,3] # corner2 = Opposite corner of meshgrid (x2,y2,z2)
+numbElements = [2,2,2] # numElements = Number of x elements, y elements, and z elements, respectively.
 
 import sys,argparse
 parser = argparse.ArgumentParser(description='Generate nodes.txt and elements.txt files based on user inputs.')
@@ -72,17 +60,17 @@ numElements = args.numElements
 print "corner_1:", corner_1 
 print"numElements:", numElements
 # Corner of meshgrid (x1,y1,z1)
-#corner_1 = [1,1,1]
+
 x1 = corner_1[0]
 y1 = corner_1[1]
 z1 = corner_1[2]
 # Opposite corner of meshgrid (x2,y2,z2)
-#corner_2 = [3,3,3]
+
 x2 = corner_2[0]
 y2 = corner_2[1]
 z2 = corner_2[2]
 # Number of x elements, y elements, and z elements, respectively.
-#numElements = [2,2,2]
+
 xEle = numElements[0]
 yEle = numElements[1]
 zEle = numElements[2]
@@ -90,18 +78,7 @@ zEle = numElements[2]
 def main():
 #    import sys, argparse
     if sys.version < '2.7':
-        sys.exit("ERROR: Requires Python >= v2.7")    
-    
-#    parser = argparse.ArgumentParser(description='Generate nodes.txt and elements.txt files based on user inputs.')
-#    parser.add_argument("corner_1", help="One of the corners that defines the mesh.")
-#    parser.add_argument("corner_2", help="The seconds corner that defines the mesh.")
-#    parser.add_argument("numElements", help="The number of mesh elements in the x direction ,y direction, and z direction, respectively.")
-#    args = parser.parse_args()
-  
-    
-    #args = parser.parse_args()
-    #disp = args.disp
-    #vel = args.vel
+        sys.exit("ERROR: Requires Python >= v2.7")
     
     node_counter()
     element_counter()
@@ -116,17 +93,9 @@ def node_counter():
         for j in range(1,yEle+2):
             for k in range(1,zEle+2):
                 nodeID = (i-1)*((yEle+1)*(zEle+1))+(j-1)*(zEle+1)+k
-                ##print("%i %i %i %i\n" % (nodeID, i, j, k))
-                # I tried to use the enumerate function for the nodeID, as so:
-                #         for index, k in enumerate(range(0,zEle):
-                # but I got stuck.  Instead, Line 38 is a simple eqation that
-                # starts at 1 and increases by one for each iteration.
                 x = x1 + (i-1)*(x2-x1)/xEle
                 y = y1 + (j-1)*(y2-y1)/yEle
                 z = z1 + (k-1)*(z2-z1)/zEle
-                # x,y,and z are found by simple eqns., but the choice to use
-                # (n-1) instead of n was a little tricky to think through.
-                ##fid.write(str(nodeID) + str(x) + str(y) + str(z) + '\n')
                 fid.write("%i,%.2f,%.2f,%.2f\n" % (nodeID, x, y, z))
                 print("%i %.2f %.2f %.2f\n" % (nodeID, x, y, z))
                 #print "i="+str(i)+", j="+str(j)+", k="+str(k)  
@@ -138,7 +107,6 @@ def node_counter():
                     if nodeID > (xEle+1)*(yEle+1)*(zEle+1): # CHECK #1
                         print "ERROR: Some nodeID values exceed the total number of nodes."  
                         break
-                        #return
                     if x<x1 or x>x2: # CHECK #2
                         print "ERROR: An 'x' value exists outside the expected range."
                         break
@@ -186,8 +154,5 @@ def element_counter():
   
 ###############################################################################          
 
-
 if __name__ == "__main__":
     main()
-
-
