@@ -3,13 +3,13 @@
 #!/usr/bin/python
 #!/bin/env python
 
-
 from __future__ import division
 
 """
-Using (x1, y1, z1) and (x2, y2, z2) as opposite corners of a meshgrid,
-this script creates nodes.dyn and elems.dyn using xEle, yEle, and zEle 
-as the number of x, y, and z elements respectively.
+Using (x1, y1, z1) and (x2, y2, z2) as opposite corners of a meshgrid
+and Ele, yEle, and zEle as the number of x, y, and z elements, respectively,
+this script generates a linear mesh and defined by nodes.dyn and 
+elems.dyn.
 
 Inputs: corner1 = (x1,y1,z1)
         corner2 = (x2,y2,z2)
@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __author__ = "Jackson Bruce Morton II"
 __email__ = "jmorton27@gmail.com"
 __date__ = "2014-01-16"
-__modified__ = "2014-02-03"
+__modified__ = "2014-04-14"
 __license__ = "GPLv3"
 
 import os
@@ -59,18 +59,18 @@ corner_2 = args.corner_2
 numElements = args.numElements
 print "corner_1:", corner_1 
 print"numElements:", numElements
-# Corner of meshgrid (x1,y1,z1)
 
+# Corner of meshgrid (x1,y1,z1)
 x1 = corner_1[0]
 y1 = corner_1[1]
 z1 = corner_1[2]
-# Opposite corner of meshgrid (x2,y2,z2)
 
+# Opposite corner of meshgrid (x2,y2,z2)
 x2 = corner_2[0]
 y2 = corner_2[1]
 z2 = corner_2[2]
-# Number of x elements, y elements, and z elements, respectively.
 
+# Number of x elements, y elements, and z elements, respectively.
 xEle = numElements[0]
 yEle = numElements[1]
 zEle = numElements[2]
@@ -85,10 +85,15 @@ def main():
 ###############################################################################
 def node_counter():  
     '''
-    This is a description of node_counter().
+    node_counter() returns a file, nodes.dyn, that defines the x, y, and z location
+    of each node in the mesh using the following format:
+    "nodeID"  "x"  "y"  "z"
+    where each node is given a unique interger value nodeID and is defined by
+    a unique set of coordinates (x,y,z).  The total number of rows in "nodes.dyn"
+    is equal to the number of nodes in the mesh.
     '''
     Test1 = True # Define a boolean that runs the testing parameters when 'True'.
-    fid = open('nodes.txt','w+')
+    fid = open('nodes.dyn','w+')
     for i in range(1,xEle+2):
         for j in range(1,yEle+2):
             for k in range(1,zEle+2):
@@ -98,15 +103,16 @@ def node_counter():
                 z = z1 + (k-1)*(z2-z1)/zEle
                 fid.write("%i,%.2f,%.2f,%.2f\n" % (nodeID, x, y, z))
                 print("%i %.2f %.2f %.2f\n" % (nodeID, x, y, z))
-                #print "i="+str(i)+", j="+str(j)+", k="+str(k)  
-                # This is where I have the most questions:
-                # 1) Is there a difference between a .txt and a .dyn file?
-                # 2) Now that I have written to nodes.txt, how do I view the
-                #   file?
-                if Test1 == True:            
+
+# Testing for node_counter is executed when Test1 = True.
+                if Test1 == True:  
+                    # CHECK 1: Make sure the nodeID is never greater than the total
+                    #          number of nodes in the mesh.
                     if nodeID > (xEle+1)*(yEle+1)*(zEle+1): # CHECK #1
                         print "ERROR: Some nodeID values exceed the total number of nodes."  
                         break
+                    # CHECK 2: Make sure that x, y, and z values are always within 
+                    #          the range defined by corner1 and corner2.
                     if x<x1 or x>x2: # CHECK #2
                         print "ERROR: An 'x' value exists outside the expected range."
                         break
@@ -128,11 +134,19 @@ def node_counter():
 ###############################################################################
 def element_counter():   
     '''
-    This is a description of element_counter(). 
+    element_counter() returns a file, elements.dyn, that lists the 8 nodes that 
+    define each elelent in the mesh using the following format:
+    "elementID"  "part"  "n1"  "n2"  "n3"  "n4"  "n5"  "n6"  "n7"  "n8"
+    where each element is given a unique interger value elementID and is defined by
+    the 8 nodes that are positioned at the 8 unique corners of the element. In this
+    script, "part" is always assumed to be equal to 1. "n1", "n2",..., "n8" are
+    the nodeIDs of the 8 nodes that define the element, as characterized by nodes.dyn.
+    The total number of rows in "elements.dyn" is equal to the number of elements in 
+    the mesh.
     '''
     Test2 = True
     part = 1
-    file2 = open('elements.txt','w+')
+    file2 = open('elements.dyn','w+')
     for i in range(1,xEle+1):
         for j in range(1,yEle+1):
             for k in range(1,zEle+1):
@@ -145,11 +159,31 @@ def element_counter():
                 n6 = n5+(zEle+1)
                 n7 = n6+1
                 n8 = n5+1
+               
                 file2.write("%i %i %i %i %i %i %i %i %i %i\n" % (elementID,part,n1,n2,n3,n4,n5,n6,n7,n8))
                 print("%i %i %i %i %i %i %i %i %i %i" % (elementID,part,n1,n2,n3,n4,n5,n6,n7,n8))
-                #if Test2 == True:
-                    #Check to see that there are only two discrete values for x,y,and z.
-                    #See additional checks written down.
+
+nodeID = (i-1)*((yEle+1)*(zEle+1))+(j-1)*(zEle+1)+k
+                x = x1 + (i-1)*(x2-x1)/xEle
+                y = y1 + (j-1)*(y2-y1)/yEle
+                z = z1 + (k-1)*(z2-z1)/zEle
+
+# Testing for node_counter is executed when Test2 = True.
+                if Test2 == True:  
+                    # CHECK 1: Make sure the elementID is never greater than the total
+                    #          number of elements in the mesh.
+                    if elementID > xEle*yEle*zEle: # CHECK #1
+                        print "ERROR: Some elementID values exceed the total number of elements."  
+                        break
+                    # CHECK 2 (could be added later):Check to see that for any element
+                    #         there are only two discrete valeus for x, y, and z.
+            else:
+                continue
+            break
+        else:
+            continue
+        break
+
     file2.close()
   
 ###############################################################################          
